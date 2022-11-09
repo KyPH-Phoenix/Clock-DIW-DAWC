@@ -13,7 +13,7 @@ function showNow() {
     m = addZeros(m);
     s = addZeros(s);
 
-    document.getElementById("clock").innerHTML = `${h}:${m}:${s}`;
+    document.getElementById("hora").innerHTML = `${h}:${m}:${s}`;
 }
 
 function addZeros(n) {
