@@ -26,7 +26,7 @@
                     <button><a href="#crono" onclick="getCrono()">Cronometre</a></button>
                 </li>
                 <li>
-                    <button><a href="#tempor">Temporitzador</a></button>
+                    <button><a href="#tempor" onclick="getTemp()">Temporitzador</a></button>
                 </li>
             </ul>
         </nav>
@@ -61,12 +61,14 @@
         <section id="crono">
             <p id="cronoItem"></p>
             <button onclick="startCrono()">Start</button>
-            <button>Pause</button>
-            <button>Reset</button>
+            <button onclick="pauseCrono()">Pause</button>
+            <button onclick="resetCrono()">Reset</button>
         </section>
         
         <section id="tempor">
-            <p>TEMPORITZADOR</p>
+            <p id="temporItem">00:00:00.000</p>
+            <button onclick="startTemp()">Start</button>
+            <input id="temp1" type="time" step="0.2" onchange="getTemp()">
         </section>
         
     </main>

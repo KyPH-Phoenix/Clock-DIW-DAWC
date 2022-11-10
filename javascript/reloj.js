@@ -150,9 +150,9 @@ function checkAlarms() {
 
     let now = new Date();
 
-    let h = now.getHours;
-    let m = now.getMinutes;
-    let s = now.getSeconds;
+    let h = now.getHours();
+    let m = now.getMinutes();
+    let s = now.getSeconds();
 
     for (let i = 0; i < alarms.length; i++) {
         let alarm = alarms[i];
@@ -160,6 +160,7 @@ function checkAlarms() {
         if (!alarm.on) continue;
 
         if (alarm.hours == h && alarm.minutes == m && alarm.seconds == s) {
+            console.log(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
             triggerAlarm(alarm);
         }
     }
@@ -169,7 +170,7 @@ function triggerAlarm(alarm) {
     let n = 0;
 
     let timeInterval = setInterval(function(){
-        document.getElementById("triggered").innerHTML = `Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`;
+        console.log(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
         n++;
     }, 500)
 
@@ -180,7 +181,8 @@ function triggerAlarm(alarm) {
 let cronoInterval = 0;
 
 function startCrono() {
-    cronoInterval = setInterval(runCrono, 0)
+    clearInterval(cronoInterval);
+    cronoInterval = setInterval(runCrono, 10);
 }
 
 function runCrono() {
@@ -191,7 +193,7 @@ function runCrono() {
     let seconds = Number(crono.seconds);
     let mili = Number(crono.mili);
 
-    mili++;
+    mili += 10;
 
     if (mili == 1000) {
         mili = 0;
@@ -204,6 +206,12 @@ function runCrono() {
             hours++
         }
     }
+
+    seconds = addZeros(seconds);
+    minutes = addZeros(minutes);
+    hours = addZeros(hours);
+
+    mili = (mili < 10) ? "00" + mili : (mili < 100) ? "0" + mili : mili;
 
     crono = {
         mili: mili,
@@ -221,12 +229,14 @@ function getCrono() {
 
     if (crono == null) {
         crono = {
-            mili: 0,
-            seconds: 0,
-            minutes: 0,
-            hours: 0
+            mili: "000",
+            seconds: "00",
+            minutes: "00",
+            hours: "00"
         }
 
+
+        
         localStorage.crono = JSON.stringify(crono);
     } else {
         crono = JSON.parse(crono);
@@ -238,5 +248,35 @@ function getCrono() {
 }
 
 function printCrono(crono) {
-    document.getElementById("cronoItem").innerHTML = `${crono.hours}:${crono.minutes}:${crono.seconds}:${crono.mili}`
+    document.getElementById("cronoItem").innerHTML = `${crono.hours}:${crono.minutes}:${crono.seconds}.${crono.mili}`
+}
+
+function pauseCrono() {
+    clearInterval(cronoInterval);
+}
+
+function resetCrono() {
+    clearInterval(cronoInterval);
+
+    let crono = {
+        mili: "000",
+        seconds: "00",
+        minutes: "00",
+        hours: "00"
+    }
+ 
+    localStorage.crono = JSON.stringify(crono);
+
+    printCrono(crono);
+}
+
+// Temporizador
+function startTemp() {
+    getTemp();
+}
+
+function getTemp() {
+    let tempor = document.getElementById("temp1").value;
+    tempor = tempor.replace(".",":").split(":");
+    console.log(tempor);
 }

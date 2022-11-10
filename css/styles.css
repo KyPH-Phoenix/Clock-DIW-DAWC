@@ -61,3 +61,7 @@ nav > ul button{
 td {
     text-align: center;
 }
+
+#tempor input {
+    width: 145px;
+}
