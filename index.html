@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C"l"ock</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body onload="reloj(), getAlarms(), getCrono()">
+    <header>
+        <!-- NavBar -->
+        <nav>
+            <ul>
+                <li>
+                    <button><a href="#clock" onclick="reloj(), getAlarms()">C'l'ock</a></button>
+                </li>
+                <li>
+                    <button><a href="#alarm" onclick="getAlarms()">Alarmes</a></button>
+                </li>
+                <li>
+                    <button><a href="#crono" onclick="getCrono()">Cronometre</a></button>
+                </li>
+                <li>
+                    <button><a href="#tempor">Temporitzador</a></button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="clock">
+            <p id="hora"></p>
+        </section>
+        
+        <section id="alarm">
+            <section>
+                <input type="time" name="newAlarm" id="newAlarm" step="2">
+                <button onclick="newAlarm()">Afegir Alarma</button>
+            </section>
+            <section>
+                <table>
+                    <thead>
+                        <th>Alarma</th>
+                        <th>Hora</th>
+                        <th colspan="3">Accions</th>
+                    </thead>
+
+                    <tbody id="alarmes"></tbody>
+                </table>
+            </section>
+            <section id="triggered">
+
+            </section>
+        </section>
+        
+        <section id="crono">
+            <p id="cronoItem"></p>
+            <button onclick="startCrono()">Start</button>
+            <button>Pause</button>
+            <button>Reset</button>
+        </section>
+        
+        <section id="tempor">
+            <p>TEMPORITZADOR</p>
+        </section>
+        
+    </main>
+
+    <script src="./javascript/reloj.js"></script>
+</body>
+
+</html>

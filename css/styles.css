@@ -1,7 +1,63 @@
+body {
+    width: 99vw;
+}
+
+main {
+    padding-left: 40px;
+}
+
 main > section {
     display: none;
+    width: 10%;
 }
 
 main > section:target {
-    display: block;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
 }   
+
+table {
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: solid black 1px;
+}
+
+header {
+    width: 100%;
+}
+
+table {
+    width: 500px;
+}
+
+tbody button {
+    width: 100%;
+}
+
+nav > ul {
+    width: 93%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    list-style: none;
+    flex-wrap: wrap;
+    padding-left: 3%;
+    padding-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+nav > ul button{
+    width: 18vw;
+    height: 50px;
+}
+
+td {
+    text-align: center;
+}
