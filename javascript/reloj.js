@@ -36,13 +36,16 @@ function timer() {
     let imprimirMinutos = minutos;
     let imprimirSegundos = segundos;
 
-    if (minutos < 10) {imprimirMinutos = "0" + minutos;}
-    if (segundos < 10) {imprimirSegundos = "0" + segundos;}
+    if (minutos < 10) { imprimirMinutos = "0" + minutos; }
+    if (segundos < 10) { imprimirSegundos = "0" + segundos; }
 
     document.getElementById("timer").innerHTML = imprimirMinutos + ":" + imprimirSegundos;
 }
 
 // Alarms
+let alarmSound = document.getElementById("alarmAudio");
+let alarmInterval = 0;
+
 function newAlarm() {
     let alarms = localStorage.alarms;
     if (alarms == null) alarms = [];
@@ -77,6 +80,8 @@ function createAlarm(time) {
 }
 
 function getAlarms() {
+    alarmSound = document.getElementById("alarmAudio");
+
     let alarms = localStorage.alarms;
     if (alarms == null) return;
     alarms = JSON.parse(localStorage.alarms);
@@ -84,8 +89,7 @@ function getAlarms() {
     let result = "";
 
     for (let i = 0; i < alarms.length; i++) {
-        result += `<tr><td>Alarma ${i + 1}</td>`
-        result += `<td id="alarma${i}">${alarms[i].hours}:${alarms[i].minutes}:${alarms[i].seconds}</td>`
+        result += `<tr><td id="alarma${i}">${alarms[i].hours}:${alarms[i].minutes}:${alarms[i].seconds}</td>`
 
         result += `<td><button onclick="onOff(${i})">`;
         if (alarms[i].on) {
@@ -101,14 +105,16 @@ function getAlarms() {
     }
 
     document.getElementById("alarmes").innerHTML = result;
-    
-    let timeInterval = setInterval(checkAlarms, 1000);
+
+    if (alarmInterval != 0) clearInterval(alarmInterval);
 }
 
 function onOff(nAlarm) {
     let alarms = JSON.parse(localStorage.alarms);
 
     alarms[nAlarm].on = !alarms[nAlarm].on;
+
+    alarmSound.pause();
 
     localStorage.alarms = JSON.stringify(alarms);
 
@@ -161,20 +167,27 @@ function checkAlarms() {
 
         if (alarm.hours == h && alarm.minutes == m && alarm.seconds == s) {
             console.log(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
-            triggerAlarm(alarm);
+            alarmSound.play();
+
+            // PUSH NOTIFICATION
+            if (!("Notification" in window)) {
+                // Check if the browser supports notifications
+                alert("This browser does not support desktop notification");
+            } else if (Notification.permission === "granted") {
+                // Check whether notification permissions have already been granted;
+                // if so, create a notification
+                const notification = new Notification(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
+            } else if (Notification.permission !== "denied") {
+                // We need to ask the user for permission
+                Notification.requestPermission().then((permission) => {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        const notification = new Notification(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
+                    }
+                });
+            }
         }
     }
-}
-
-function triggerAlarm(alarm) {
-    let n = 0;
-
-    let timeInterval = setInterval(function(){
-        console.log(`Sonant alarma de les ${alarm.hours}:${alarm.minutes}:${alarm.seconds}`);
-        n++;
-    }, 500)
-
-    if (n == 10) clearInterval(timeInterval);
 }
 
 // Cronometro
@@ -235,13 +248,11 @@ function getCrono() {
             hours: "00"
         }
 
-
-        
         localStorage.crono = JSON.stringify(crono);
     } else {
         crono = JSON.parse(crono);
     }
-    
+
     printCrono(crono);
 
     return crono;
@@ -264,7 +275,7 @@ function resetCrono() {
         minutes: "00",
         hours: "00"
     }
- 
+
     localStorage.crono = JSON.stringify(crono);
 
     printCrono(crono);
@@ -277,6 +288,6 @@ function startTemp() {
 
 function getTemp() {
     let tempor = document.getElementById("temp1").value;
-    tempor = tempor.replace(".",":").split(":");
+    tempor = tempor.replace(".", ":").split(":");
     console.log(tempor);
 }

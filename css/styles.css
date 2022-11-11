@@ -8,7 +8,7 @@ main {
 
 main > section {
     display: none;
-    width: 10%;
+    width: 100%;
 }
 
 main > section:target {
@@ -19,6 +19,7 @@ main > section:target {
 
 table {
     margin-top: 10px;
+    width: 10vw;
 }
 
 table, th, td {
@@ -30,10 +31,17 @@ header {
 }
 
 table {
-    width: 500px;
+    min-width: auto;
+    width: 50%;
+}
+
+button {
+    min-width: 100px;
+    width: 10%;
 }
 
 tbody button {
+    min-width: fit-content;
     width: 100%;
 }
 
@@ -53,7 +61,7 @@ a {
     color: black;
 }
 
-nav > ul button{
+nav > ul > li > button{
     width: 18vw;
     height: 50px;
 }
@@ -63,5 +71,5 @@ td {
 }
 
 #tempor input {
-    width: 145px;
+    width: 145px;   
 }
