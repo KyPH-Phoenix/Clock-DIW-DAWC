@@ -21,7 +21,9 @@
     "prettier": "^2.7.1"
   },
   "devDependencies": {
+    "@parcel/packager-raw-url": "^2.8.0",
     "@parcel/transformer-sass": "^2.7.0",
+    "@parcel/transformer-webmanifest": "^2.8.0",
     "parcel": "^2.7.0"
   }
 }

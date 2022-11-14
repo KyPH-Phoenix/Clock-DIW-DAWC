@@ -1,5 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Sono&display=swap');
+
+/* Color Palette */
+:root {
+    --dark-liver: #504746ff;
+    --antique-brass: #b89685ff;
+    --silver-pink: #bfada3ff;
+    --light-pink: #fbb7c0ff;
+    --amaranth-purple: #b6244fff;
+}
+
+.darkMode {
+    background-color: var(--dark-liver);
+    color: white;
+}
+
+.darkModeP {
+    color: white;
+}
+
+* {
+    font-family: 'Sono', sans-serif;
+}
+
 body {
     width: 99vw;
+    background-color: var(--silver-pink);
 }
 
 main {
@@ -20,6 +45,11 @@ main > section:target {
 table {
     margin-top: 10px;
     width: 10vw;
+    background-color: var(--amaranth-purple);
+}
+
+th, td {
+    background-color: var(--light-pink);
 }
 
 table, th, td {
@@ -38,6 +68,10 @@ table {
 button {
     min-width: 100px;
     width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 tbody button {
@@ -51,7 +85,7 @@ nav > ul {
     flex-direction: row;
     justify-content: space-between;
     list-style: none;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding-left: 3%;
     padding-top: 20px;
 }
@@ -61,7 +95,7 @@ a {
     color: black;
 }
 
-nav > ul > li > button{
+nav > ul > li > a > button {
     width: 18vw;
     height: 50px;
 }
@@ -70,6 +104,26 @@ td {
     text-align: center;
 }
 
-#tempor input {
+#tempor > input {
     width: 145px;   
+}
+
+#addTemp {
+    width: fit-content;
+}
+
+#tempButtons > button {
+    width: fit-content;
+}
+
+#theme {
+    position: fixed;
+    bottom: 50;
+    left: 50;
+}
+
+#pageIcon{
+    position: absolute;
+    bottom: 50;
+    right: 50;
 }

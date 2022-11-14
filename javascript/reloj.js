@@ -1,6 +1,6 @@
 // Clock
 function reloj() {
-    let timeInterval = setInterval(showNow, 1000);
+    setInterval(showNow, 1000);
 }
 
 function showNow() {
@@ -91,7 +91,7 @@ function getAlarms() {
     for (let i = 0; i < alarms.length; i++) {
         result += `<tr><td id="alarma${i}">${alarms[i].hours}:${alarms[i].minutes}:${alarms[i].seconds}</td>`
 
-        result += `<td><button onclick="onOff(${i})">`;
+        result += `<td><button onclick="onOff(${i})"><span class="material-symbols-outlined">power_rounded</span>`;
         if (alarms[i].on) {
             result += "Apaga"
         } else {
@@ -99,9 +99,9 @@ function getAlarms() {
         }
         result += "</button></td>"
 
-        result += `<td><button onclick="deleteAlarm(${i})">Esborrar</button></td>`;
+        result += `<td><button onclick="deleteAlarm(${i})"><span class="material-symbols-outlined">delete</span>Esborrar</button></td>`;
 
-        result += `<td id="edita${i}"><button onclick="edita(${i})">Edita</button></td></tr>`;
+        result += `<td id="edita${i}"><button onclick="edita(${i})"><span class="material-symbols-outlined">edit_square</span>Edita</button></td></tr>`;
     }
 
     document.getElementById("alarmes").innerHTML = result;
@@ -241,14 +241,7 @@ function getCrono() {
     let crono = localStorage.crono;
 
     if (crono == null) {
-        crono = {
-            mili: "000",
-            seconds: "00",
-            minutes: "00",
-            hours: "00"
-        }
-
-        localStorage.crono = JSON.stringify(crono);
+        resetCrono();
     } else {
         crono = JSON.parse(crono);
     }
@@ -282,12 +275,137 @@ function resetCrono() {
 }
 
 // Temporizador
+let tempInterval = 0;
+let bucleOn = false;
+
 function startTemp() {
-    getTemp();
+    tempInterval = setInterval(runTemp, 10)
 }
 
 function getTemp() {
     let tempor = document.getElementById("temp1").value;
-    tempor = tempor.replace(".", ":").split(":");
-    console.log(tempor);
+    
+    if (tempor == "") {
+        tempor = localStorage.temporOriginal;
+        if (tempor == null) {
+            return;
+        } else {
+            tempor = JSON.parse(tempor);
+            document.getElementById("temp1").value = `${tempor[0]}:${tempor[1]}:${tempor[2]}.${tempor[3]}`;
+            console.log(`${tempor[0]}:${tempor[1]}:${tempor[2]}.${tempor[3]}`);
+        }
+    } else {
+        tempor = tempor.replace(".", ":").split(":");
+    }
+    
+    localStorage.tempor = JSON.stringify(tempor);
+    localStorage.temporOriginal = JSON.stringify(tempor);
+
+    printTemp(tempor);
+}
+
+function printTemp(tempor) {
+    document.getElementById("temporItem").innerHTML = `${tempor[0]}:${tempor[1]}:${(tempor[2] == null) ? "00" : tempor[2]}.${(tempor[3] == null) ? "000" : tempor[3]}`;
+}
+
+function runTemp() {
+    let tempor = JSON.parse(localStorage.tempor);
+
+    let hours = Number(tempor[0]);
+    let minutes = Number(tempor[1]);
+    let seconds = Number((tempor[2] == null) ? 0 : tempor[2]);
+    let mili = Number((tempor[3] == null) ? 0 : tempor[3]);
+
+    mili -= 10;
+
+    if (mili < 0) {
+        mili = 1000 + mili;
+        seconds--;
+        if (seconds < 0) {
+            seconds = 59;
+            minutes--;
+        } if (minutes < 0) {
+            minutes = 59;
+            hours--;
+        }
+    }
+
+    if (hours < 0 || minutes < 0 || seconds < 0 || mili < 0) {
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        mili = 0;
+
+        alarmSound.pause();
+        alarmSound.play();
+
+        console.log("sonando");
+
+        // PUSH NOTIFICATION
+        if (!("Notification" in window)) {
+            // Check if the browser supports notifications
+            alert("This browser does not support desktop notification");
+        } else if (Notification.permission === "granted") {
+            // Check whether notification permissions have already been granted;
+            // if so, create a notification
+            const notification = new Notification(`Sonant alarma del temporitzador`);
+        } else if (Notification.permission !== "denied") {
+            // We need to ask the user for permission
+            Notification.requestPermission().then((permission) => {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    const notification = new Notification(`Sonant alarma del temporitzador`);
+                }
+            });
+        }
+
+        if (bucleOn) {
+            localStorage.tempor = localStorage.temporOriginal;
+            printTemp(tempor);
+            return;
+        } else {
+            clearInterval(tempInterval);
+        }
+    }
+
+    seconds = addZeros(seconds);
+    minutes = addZeros(minutes);
+    hours = addZeros(hours);
+    mili = (mili < 10) ? "00" + mili : (mili < 100) ? "0" + mili : mili;
+
+    tempor[0] = hours;
+    tempor[1] = minutes;
+    tempor[2] = seconds;
+    tempor[3] = mili;
+
+    localStorage.tempor = JSON.stringify(tempor);
+
+    printTemp(tempor);
+}
+
+function pauseTemp() {
+    clearInterval(tempInterval);
+}
+
+function resetTemp() {
+    clearInterval(tempInterval);
+    document.getElementById("temp1").value = "00:00:00.000";
+
+    localStorage.tempor = JSON.stringify("00:00:00.000".replace(".", ":").split(":"));
+    localStorage.temporOriginal = JSON.stringify("00:00:00.000".replace(".", ":").split(":"));
+
+    printTemp(["00", "00", "00", "000"]);
+}
+
+function bucleTemp() {
+    bucleOn = !bucleOn;
+    if (bucleOn) {
+        document.getElementById("bucle").innerHTML = `<span class="material-symbols-outlined">sync</span>Bucle: Apagar`
+    } else {
+        document.getElementById("bucle").innerHTML = `<span class="material-symbols-outlined">sync</span>Bucle: Encendre`
+    }
+}
+
+function stopSound() {
+    alarmSound.pause();
 }
